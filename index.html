@@ -9,7 +9,7 @@
 <meta property="og:image" content="https://lilboat001.github.io/huadong-mingche/images/logo.png">
 <meta property="og:type" content="website">
 <title>衢州华东名车</title>
-<link rel="stylesheet" href="css/style.css?v=10">
+<link rel="stylesheet" href="css/style.css?v=11">
 <style>
 .ct-sec{max-width:1260px;margin:36px auto 0;padding:0 20px}
 .ct-card{background:#fff;border-radius:14px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;box-shadow:0 1px 10px rgba(0,0,0,.04);border:1px solid #eee}
@@ -229,7 +229,6 @@ function syncBottomNav(mode){
   });
 }
 
-// 3D展台已移除，保留空函数防止报错
 function initShowcase(){}
 function showScCar(idx){}
 function startScAuto(){}
@@ -247,15 +246,70 @@ function initBrandPills(){
 }
 function renderFeatured(){$('featuredGrid').innerHTML=cars.slice(0,4).map(function(c){var p=(c.price/10000).toFixed(2);return'<div class="featured-card" onclick="A.detail('+c.id+')"><div class="featured-img"><img src="'+(c.images[0]||'')+'" loading="lazy" onerror="this.parentElement.style.background=\'linear-gradient(135deg,#1a1a2e,#c1121f)\'"><div class="featured-overlay"><span class="featured-brand">'+c.brand+' '+c.model+'</span><span class="featured-price">'+p+'万</span></div></div><div class="featured-body"><span class="meta-item">'+(c.year||'')+'年</span><span class="meta-item">'+(c.mileage||'')+'万km</span><span class="meta-item">'+c.transmission+'</span><span class="meta-item">'+(c.location||'')+'</span></div></div>'}).join('')}
 function renderShowroomGrid(list){var show=list.slice(0,9);$('showroomCount').textContent='共 '+list.length+' 辆';var h=show.length?show.map(function(c){var p=(c.price/10000).toFixed(2);return'<div class="car-card" onclick="A.detail('+c.id+')"><div class="card-img"><img src="'+(c.images[0]||'')+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:28px>🚗</div>\'"><div class="card-year-tag">'+(c.year||'')+'年</div>'+(c.spin3d&&c.spin3d.enabled?'<div class="badge-360">360°</div>':'')+'</div><div class="card-body"><div class="card-title">'+c.brand+' '+c.model+'</div><div class="card-price">'+p+'<small>万元</small></div><div class="card-meta"><span class="meta-item">📏 '+(c.mileage||'')+'万km</span><span class="meta-item">⚙️ '+c.transmission+'</span><span class="meta-item">⛽ '+c.fuel+'</span></div></div><div class="card-footer"><span>📍 '+(c.location||'')+'</span><span>'+(c.displacement||'')+'</span></div></div>'}).join(''):'<div class="empty-state"><div class="icon">🔍</div><p>暂无车源</p></div>';h+='<div class="car-card" onclick="A.goSelect()" style="display:flex;align-items:center;justify-content:center;gap:6px;min-height:80px;cursor:pointer;font-size:15px;font-weight:600;color:#e63946">查看更多 <span style="font-size:18px">→</span></div>';$('showroomGrid').innerHTML=h;}
-  function initFilters(){[...new Set(cars.map(function(c){return c.brand}))].sort().forEach(function(b){var o=document.createElement("option");o.value=b;o.textContent=b;document.getElementById("brandList").appendChild(o)});[...new Set(cars.map(function(c){return c.fuel}))].sort().forEach(function(f){var o=document.createElement("option");o.value=f;o.textContent=f;document.getElementById("fuelList").appendChild(o)})}
-function applyFilters(){var f={brand:$('filterBrand').value,trans:$('filterTransmission').value,fuel:$('filterFuel').value,min:$('priceMin').value?+$('priceMin').value:0,max:$('priceMax').value?+$('priceMax').value:Infinity};var txt=window._searchText||'';var spOn=$('filterSpecial')&&$('filterSpecial').classList.contains('active');renderSelectGrid(cars.filter(function(c){if(f.brand&&c.brand!==f.brand)return false;if(f.trans&&c.transmission!==f.trans)return false;if(f.fuel&&c.fuel!==f.fuel)return false;var p=c.price/10000;if(p<f.min||p>f.max)return false;if(txt&&(c.brand+' '+c.model).toLowerCase().indexOf(txt)===-1)return false;if(spOn){var prices=cars.map(function(x){return x.price});var avg=prices.reduce(function(a,b){return a+b},0)/prices.length;if(c.price>avg)return false}return true}))}
-$("filterBrand").addEventListener('input',applyFilters);$("filterBrand").addEventListener('change',applyFilters);$("filterTransmission").addEventListener('input',applyFilters);$("filterTransmission").addEventListener('change',applyFilters);$("filterFuel").addEventListener('input',applyFilters);$("filterFuel").addEventListener('change',applyFilters);$('priceMin').addEventListener('input',applyFilters);$('priceMax').addEventListener('input',applyFilters);
-$('btnReset').addEventListener('click',function(){$('filterBrand').value='';$('filterTransmission').value='';$('filterFuel').value='';$('priceMin').value='';$('priceMax').value='';$('filterSpecial').classList.remove('active');renderSelectGrid(cars)});
-	function doSearch(){var txt=window._searchText||'';var spOn=$('filterSpecial')&&$('filterSpecial').classList.contains('active');var filtered=cars;if(txt){filtered=filtered.filter(function(c){return(c.brand+' '+c.model).toLowerCase().indexOf(txt)!==-1})}if(spOn){var prices=cars.map(function(x){return x.price});var avg=prices.reduce(function(a,b){return a+b},0)/prices.length;filtered=filtered.filter(function(c){return c.price<=avg})}renderShowroomGrid(filtered);if($('selectMode').style.display!=='none'){applyFilters()}}
-function renderSelectGrid(list){$('detailPage').style.display='none';if(!list.length){$('carGrid').style.display='none';$('emptyState').style.display='';$('resultCount').textContent='0个结果'}else{$('carGrid').style.display='';$('emptyState').style.display='none';$('resultCount').textContent=list.length+'个车源';$('carGrid').innerHTML=list.map(function(c){var p=(c.price/10000).toFixed(2);return'<div class="car-card" onclick="A.detail('+c.id+')"><div class="card-img"><img src="'+(c.images[0]||'')+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:28px>🚗</div>\'"><div class="card-year-tag">'+(c.year||'')+'年</div>'+(c.spin3d&&c.spin3d.enabled?'<div class="badge-360">360°</div>':'')+'</div><div class="card-body"><div class="card-title">'+c.brand+' '+c.model+'</div><div class="card-price">'+p+'<small>万元</small></div><div class="card-meta"><span class="meta-item">📏 '+(c.mileage||'')+'万km</span><span class="meta-item">⚙️ '+c.transmission+'</span><span class="meta-item">⛽ '+c.fuel+'</span></div></div><div class="card-footer"><span>📍 '+(c.location||'')+'</span><span>'+(c.displacement||'')+'</span></div></div>'}).join('')}}
+
+function initFilters(){
+  var bl=document.getElementById('brandList'), fl=document.getElementById('fuelList');
+  if(bl){(new Set(cars.map(function(c){return c.brand}))).forEach(function(b){var o=document.createElement('option');o.value=b;bl.appendChild(o)})}
+  if(fl){(new Set(cars.map(function(c){return c.fuel}))).forEach(function(f){var o=document.createElement('option');o.value=f;fl.appendChild(o)})}
+}
+
+function applyFilters(){
+  var f={brand:$('filterBrand').value.toLowerCase(),trans:$('filterTransmission').value.toLowerCase(),fuel:$('filterFuel').value.toLowerCase(),min:$('priceMin').value?+$('priceMin').value:0,max:$('priceMax').value?+$('priceMax').value:Infinity};
+  var txt=window._searchText||'';
+  var spOn=$('filterSpecial')&&$('filterSpecial').classList.contains('active');
+  var list=cars.filter(function(c){
+    if(f.brand&&c.brand.toLowerCase().indexOf(f.brand)===-1)return false;
+    if(f.trans&&c.transmission.toLowerCase().indexOf(f.trans)===-1)return false;
+    if(f.fuel&&c.fuel.toLowerCase().indexOf(f.fuel)===-1)return false;
+    var p=c.price/10000;
+    if(p<f.min||p>f.max)return false;
+    if(txt&&(c.brand+' '+c.model).toLowerCase().indexOf(txt)===-1)return false;
+    if(spOn){var prices=cars.map(function(x){return x.price});var avg=prices.reduce(function(a,b){return a+b},0)/prices.length;if(c.price>avg)return false}
+    return true;
+  });
+  renderSelectGrid(list);
+}
+
+$('filterBrand').addEventListener('input',applyFilters);
+$('filterBrand').addEventListener('change',applyFilters);
+$('filterTransmission').addEventListener('input',applyFilters);
+$('filterTransmission').addEventListener('change',applyFilters);
+$('filterFuel').addEventListener('input',applyFilters);
+$('filterFuel').addEventListener('change',applyFilters);
+$('priceMin').addEventListener('input',applyFilters);
+$('priceMax').addEventListener('input',applyFilters);
+$('btnReset').addEventListener('click',function(){
+  $('filterBrand').value='';$('filterTransmission').value='';$('filterFuel').value='';
+  $('priceMin').value='';$('priceMax').value='';
+  if($('filterSpecial'))$('filterSpecial').classList.remove('active');
+  renderSelectGrid(cars);
+});
+
+function doSearch(){
+  var txt=window._searchText||'';
+  var spOn=$('filterSpecial')&&$('filterSpecial').classList.contains('active');
+  var filtered=cars;
+  if(txt){filtered=filtered.filter(function(c){return(c.brand+' '+c.model).toLowerCase().indexOf(txt)!==-1})}
+  if(spOn){var prices=cars.map(function(x){return x.price});var avg=prices.reduce(function(a,b){return a+b},0)/prices.length;filtered=filtered.filter(function(c){return c.price<=avg})}
+  renderShowroomGrid(filtered);
+  if($('selectMode').style.display!=='none'){applyFilters()}
+}
+
+function renderSelectGrid(list){
+  $('detailPage').style.display='none';
+  if(!list.length){
+    $('carGrid').style.display='none';$('emptyState').style.display='';
+    $('resultCount').textContent='0个结果';
+  }else{
+    $('carGrid').style.display='';$('emptyState').style.display='none';
+    $('resultCount').textContent=list.length+'个车源';
+    $('carGrid').innerHTML=list.map(function(c){var p=(c.price/10000).toFixed(2);return'<div class="car-card" onclick="A.detail('+c.id+')"><div class="card-img"><img src="'+(c.images[0]||'')+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:28px>🚗</div>\'"><div class="card-year-tag">'+(c.year||'')+'年</div>'+(c.spin3d&&c.spin3d.enabled?'<div class="badge-360">360°</div>':'')+'</div><div class="card-body"><div class="card-title">'+c.brand+' '+c.model+'</div><div class="card-price">'+p+'<small>万元</small></div><div class="card-meta"><span class="meta-item">📏 '+(c.mileage||'')+'万km</span><span class="meta-item">⚙️ '+c.transmission+'</span><span class="meta-item">⛽ '+c.fuel+'</span></div></div><div class="card-footer"><span>📍 '+(c.location||'')+'</span><span>'+(c.displacement||'')+'</span></div></div>'}).join('');
+  }
+}
 
 function showDetail(id){
-  var c=cars.find(function(x){return x.id===id});if(!c)return;curCar=c;curImg=0;var p=(c.price/10000).toFixed(2),h3=c.spin3d&&c.spin3d.enabled&&c.spin3d.images&&c.spin3d.images.length>=4;
+  var c=cars.find(function(x){return x.id===id});if(!c)return;curCar=c;curImg=0;
+  var p=(c.price/10000).toFixed(2),h3=c.spin3d&&c.spin3d.enabled&&c.spin3d.images&&c.spin3d.images.length>=4;
   $('showroomMode').style.display='none';$('selectMode').style.display='none';$('detailPage').style.display='';stopScAuto();
   $('detailPage').innerHTML='<button class="btn-back" onclick="A.back()">← 返回</button>'+
     (h3?'<div class="spin3d-container" id="sd"><div class="spin3d-viewer" id="sv"><img src="'+c.spin3d.images[0]+'" id="si" alt=""><div class="spin3d-hint">↔ 左右拖拽旋转</div></div><div class="spin3d-dots" id="sdd">'+c.spin3d.images.map(function(_,i){return'<span class="spin3d-dot'+(i===0?' active':'')+'"></span>'}).join('')+'</div><div class="spin3d-toolbar"><button onclick="A.spPrev()">◀ 上一个</button><button class="spin3d-auto-btn" id="sab" onclick="A.spAuto()">▶ 自动旋转</button><button onclick="A.spNext()">下一个 ▶</button></div></div>'
@@ -276,16 +330,12 @@ function gNext(){if(!curCar)return;gThumb((curImg+1)%curCar.images.length)}
 function goBack(){$('detailPage').style.display='none';curCar=null;if(localStorage.getItem('car_view_mode')==='select'){$('selectMode').style.display='';applyFilters()}else{$('showroomMode').style.display='';startScAuto()}}
 
 $('floatingBtn').addEventListener('click',function(){
-  if(window.innerWidth<=640){
-    openContactSheet();
-  }else{
-    $('floatingPanel').classList.toggle('show');
-  }
+  if(window.innerWidth<=640){openContactSheet();}
+  else{$('floatingPanel').classList.toggle('show');}
 });
 $('closePanel').addEventListener('click',function(){$('floatingPanel').classList.remove('show')});
 document.addEventListener('click',function(e){if($('floatingPanel').classList.contains('show')&&!e.target.closest('.floating-contact'))$('floatingPanel').classList.remove('show')});
 
-// ===== 底部导航 =====
 document.querySelectorAll('.nav-item').forEach(function(btn){
   btn.addEventListener('click',function(){
     var mode=this.getAttribute('data-nav');
@@ -296,18 +346,9 @@ document.querySelectorAll('.nav-item').forEach(function(btn){
   });
 });
 
-// ===== 联系面板 (ActionSheet) =====
-function openContactSheet(){
-  $('contactSheet').classList.add('open');
-  $('csBackdrop').classList.add('show');
-}
-function closeContactSheet(){
-  $('contactSheet').classList.remove('open');
-  $('csBackdrop').classList.remove('show');
-}
+function openContactSheet(){$('contactSheet').classList.add('open');$('csBackdrop').classList.add('show');}
+function closeContactSheet(){$('contactSheet').classList.remove('open');$('csBackdrop').classList.remove('show');}
 $('csBackdrop').addEventListener('click', closeContactSheet);
-
-// 展厅轮播已移除
 
 window.A={detail:showDetail,back:goBack,goSelect:goSelect,gThumb:gThumb,gPrev:gPrev,gNext:gNext,spPrev:spPrev,spNext:spNext,spAuto:spAuto,doSearch:doSearch};
 init();
