@@ -2,7 +2,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="format-detection" content="telephone=yes">
+<meta property="og:title" content="衢州华东名车 - 品质二手车">
+<meta property="og:description" content="严选好车 · 车况透明 · 品质保证 · 15967800642">
+<meta property="og:image" content="https://gleaming-speculoos-ee9b66.netlify.app/images/logo.png">
+<meta property="og:type" content="website">
 <title>衢州华东名车</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
@@ -32,8 +37,6 @@
 .info-label{display:block;font-size:12px;color:#888;margin-top:4px}
 .info-icon{font-size:22px;display:block;margin-bottom:2px}
 .info-card-contact .info-num{font-size:16px}
-@media(max-width:768px){.info-banner-inner{grid-template-columns:repeat(2,1fr)}.info-num{font-size:20px}}
-@media(max-width:768px){.ct-card{flex-direction:column;text-align:center}.ct-right{justify-content:center}}
 </style>
 </head>
 <body>
@@ -157,6 +160,43 @@
   </div>
 </div>
 
+<!-- 底部导航栏 (手机端) -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-item active" data-nav="showroom">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">展厅</span>
+  </button>
+  <button class="nav-item" data-nav="select">
+    <span class="nav-icon">📋</span>
+    <span class="nav-label">选车</span>
+  </button>
+  <button class="nav-item" data-nav="call">
+    <span class="nav-icon">📞</span>
+    <span class="nav-label">电话</span>
+  </button>
+  <button class="nav-item" data-nav="wechat">
+    <span class="nav-icon">💬</span>
+    <span class="nav-label">微信</span>
+  </button>
+</nav>
+
+<!-- 联系面板 (ActionSheet) -->
+<div class="contact-sheet-backdrop" id="csBackdrop"></div>
+<div class="contact-sheet" id="contactSheet">
+  <div class="contact-sheet-handle"></div>
+  <div class="contact-sheet-content">
+    <a href="tel:15967800642" class="contact-row call-row">
+      <span class="icon">📞</span> 拨打电话 15967800642
+    </a>
+    <div class="contact-row" onclick="navigator.clipboard.writeText('15967800642');alert('微信号已复制：15967800642')">
+      <span class="icon">💬</span> 复制微信号 15967800642
+    </div>
+    <div class="contact-row" style="cursor:default">
+      <span class="icon">🕐</span> 全天 24小时在线
+    </div>
+  </div>
+</div>
+
 <script src="js/app.js"></script>
 <script>
 (function(){
@@ -173,8 +213,13 @@ function init(){
   $('modeToggle2').addEventListener('click',goShowroom);
   window.addEventListener('storage',function(e){if(e.key==='car_inventory')location.reload()});
 }
-function goShowroom(){$('showroomMode').style.display='';$('selectMode').style.display='none';localStorage.setItem('car_view_mode','showroom');startScAuto()}
-function goSelect(){$('showroomMode').style.display='none';$('selectMode').style.display='';localStorage.setItem('car_view_mode','select');stopScAuto();applyFilters()}
+function goShowroom(){$('showroomMode').style.display='';$('selectMode').style.display='none';localStorage.setItem('car_view_mode','showroom');startScAuto();syncBottomNav('showroom')}
+function goSelect(){$('showroomMode').style.display='none';$('selectMode').style.display='';localStorage.setItem('car_view_mode','select');stopScAuto();applyFilters();syncBottomNav('select')}
+function syncBottomNav(mode){
+  document.querySelectorAll('.nav-item').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-nav') === mode);
+  });
+}
 
 function initShowcase(){
   scList=cars.filter(function(c){return c.spin3d&&c.spin3d.enabled&&c.spin3d.images&&c.spin3d.images.length>=4});
@@ -200,9 +245,9 @@ function setupScSpin(){
   v.onmousedown=function(e){drag=true;sx=e.clientX;sf=cur;h.style.opacity='0';stopScAuto();e.preventDefault()};
   document.onmousemove=function(e){if(!drag)return;upd(sf+Math.round((e.clientX-sx)/12))};
   document.onmouseup=function(){drag=false};
-  v.ontouchstart=function(e){drag=true;sx=e.touches[0].clientX;sf=cur;h.style.opacity='0';stopScAuto()};
-  v.ontouchmove=function(e){if(!drag)return;upd(sf+Math.round((e.touches[0].clientX-sx)/12))};
-  v.ontouchend=function(){drag=false};
+  v.addEventListener('touchstart',function(e){drag=true;sx=e.touches[0].clientX;sf=cur;h.style.opacity='0';stopScAuto()},{passive:true});
+  v.addEventListener('touchmove',function(e){if(!drag)return;e.preventDefault();var delta=Math.round((e.touches[0].clientX-sx)/8);if(delta!==0){upd(sf+delta);sf=cur;sx=e.touches[0].clientX}},{passive:false});
+  v.addEventListener('touchend',function(){drag=false});
 }
 function startScAuto(){stopScAuto();if(!scIs3D||scImgs.length<2)return;scTimer=setInterval(function(){var i=$('scImg').src;var c=scImgs.indexOf(i);if(c<0)c=0;var n=(c+1)%scImgs.length;$('scImg').src=scImgs[n];$('scDots').querySelectorAll('.showcase-viewer-dot').forEach(function(d,j){d.classList.toggle('active',j===n)})},2000)}
 function stopScAuto(){clearInterval(scTimer)}
@@ -243,15 +288,63 @@ function updSpin3(i){if(!ss.imgs.length)return;ss.cur=((i%ss.imgs.length)+ss.img
 function spPrev(){updSpin3(ss.cur-1);stopSpin3()}function spNext(){updSpin3(ss.cur+1);stopSpin3()}
 function spAuto(){var b=$('sab');if(ss.timer){stopSpin3();if(b){b.textContent='▶ 自动旋转';b.classList.remove('playing')}return}if(b){b.textContent='⏸ 停止';b.classList.add('playing')}ss.timer=setInterval(function(){updSpin3(ss.cur+1)},150)}
 function stopSpin3(){clearInterval(ss.timer);ss.timer=null}
-function setupSpin3(){var v=$('sv');if(!v)return;var h=v.querySelector('.spin3d-hint'),drag=false,sx=0,sf=0;v.addEventListener('mousedown',function(e){drag=true;sx=e.clientX;sf=ss.cur;v.style.cursor='grabbing';h.style.opacity='0';stopSpin3();e.preventDefault()});document.addEventListener('mousemove',function(e){if(!drag)return;updSpin3(sf+Math.round((e.clientX-sx)/12))});document.addEventListener('mouseup',function(){if(drag){drag=false;v.style.cursor='ew-resize'}});v.addEventListener('touchstart',function(e){drag=true;sx=e.touches[0].clientX;sf=ss.cur;h.style.opacity='0';stopSpin3()});v.addEventListener('touchmove',function(e){if(!drag)return;updSpin3(sf+Math.round((e.touches[0].clientX-sx)/12))});v.addEventListener('touchend',function(){drag=false})}
+function setupSpin3(){var v=$('sv');if(!v)return;var h=v.querySelector('.spin3d-hint'),drag=false,sx=0,sf=0;v.addEventListener('mousedown',function(e){drag=true;sx=e.clientX;sf=ss.cur;v.style.cursor='grabbing';h.style.opacity='0';stopSpin3();e.preventDefault()});document.addEventListener('mousemove',function(e){if(!drag)return;updSpin3(sf+Math.round((e.clientX-sx)/12))});document.addEventListener('mouseup',function(){if(drag){drag=false;v.style.cursor='ew-resize'}});v.addEventListener('touchstart',function(e){drag=true;sx=e.touches[0].clientX;sf=ss.cur;h.style.opacity='0';stopSpin3()},{passive:true});v.addEventListener('touchmove',function(e){if(!drag)return;e.preventDefault();var delta=Math.round((e.touches[0].clientX-sx)/8);if(delta!==0){updSpin3(sf+delta);sf=ss.cur;sx=e.touches[0].clientX}},{passive:false});v.addEventListener('touchend',function(){drag=false})}
 function gThumb(i){if(!curCar)return;curImg=i;var m=$('gm');if(m)m.src=curCar.images[i];document.querySelectorAll('.gallery-thumb').forEach(function(t,j){t.classList.toggle('active',j===i)})}
 function gPrev(){if(!curCar)return;gThumb((curImg-1+curCar.images.length)%curCar.images.length)}
 function gNext(){if(!curCar)return;gThumb((curImg+1)%curCar.images.length)}
 function goBack(){$('detailPage').style.display='none';curCar=null;if(localStorage.getItem('car_view_mode')==='select'){$('selectMode').style.display='';applyFilters()}else{$('showroomMode').style.display='';startScAuto()}}
 
-$('floatingBtn').addEventListener('click',function(){$('floatingPanel').classList.toggle('show')});
+$('floatingBtn').addEventListener('click',function(){
+  if(window.innerWidth<=640){
+    openContactSheet();
+  }else{
+    $('floatingPanel').classList.toggle('show');
+  }
+});
 $('closePanel').addEventListener('click',function(){$('floatingPanel').classList.remove('show')});
 document.addEventListener('click',function(e){if($('floatingPanel').classList.contains('show')&&!e.target.closest('.floating-contact'))$('floatingPanel').classList.remove('show')});
+
+// ===== 底部导航 =====
+document.querySelectorAll('.nav-item').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var mode=this.getAttribute('data-nav');
+    if(mode==='showroom') goShowroom();
+    else if(mode==='select') goSelect();
+    else if(mode==='call'){ window.location.href='tel:15967800642'; }
+    else if(mode==='wechat'){ openContactSheet(); }
+  });
+});
+
+// ===== 联系面板 (ActionSheet) =====
+function openContactSheet(){
+  $('contactSheet').classList.add('open');
+  $('csBackdrop').classList.add('show');
+}
+function closeContactSheet(){
+  $('contactSheet').classList.remove('open');
+  $('csBackdrop').classList.remove('show');
+}
+$('csBackdrop').addEventListener('click', closeContactSheet);
+
+// ===== 展厅轮播滑动手势 =====
+(function(){
+  var wrap=$('scViewer'),tx=0,swiping=false,startY=0;
+  wrap.addEventListener('touchstart',function(e){
+    tx=e.touches[0].clientX;startY=e.touches[0].clientY;swiping=false;
+  },{passive:true});
+  wrap.addEventListener('touchmove',function(e){
+    var dx=e.touches[0].clientX-tx;
+    var dy=e.touches[0].clientY-startY;
+    if(Math.abs(dx)>30&&Math.abs(dx)>Math.abs(dy)){swiping=true;e.preventDefault()}
+  },{passive:false});
+  wrap.addEventListener('touchend',function(e){
+    if(!swiping)return;
+    var dx=e.changedTouches[0].clientX-tx;
+    if(dx<-50){showScCar((scIdx+1)%scList.length);stopScAuto()}
+    else if(dx>50){showScCar((scIdx-1+scList.length)%scList.length);stopScAuto()}
+    swiping=false;
+  });
+})();
 
 window.A={detail:showDetail,showSc:showScCar,back:goBack,gThumb:gThumb,gPrev:gPrev,gNext:gNext,spPrev:spPrev,spNext:spNext,spAuto:spAuto};
 init();

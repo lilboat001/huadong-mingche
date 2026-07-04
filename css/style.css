@@ -518,68 +518,6 @@ img {
 }
 
 /* ========== Responsive ========== */
-@media (max-width: 1024px) {
-  .car-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-}
-
-@media (max-width: 768px) {
-  .car-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .card-body {
-    padding: 10px 12px;
-  }
-
-  .card-title {
-    font-size: 13px;
-  }
-
-  .card-price {
-    font-size: 17px;
-  }
-
-  .filter-bar {
-    gap: 8px;
-  }
-
-  .filter-group select,
-  .filter-group input {
-    min-width: auto;
-    font-size: 13px;
-    padding: 8px 10px;
-  }
-
-  .price-inputs input {
-    width: 70px;
-  }
-
-  .detail-card {
-    padding: 20px;
-  }
-
-  .detail-title {
-    font-size: 18px;
-  }
-
-  .detail-price {
-    font-size: 24px;
-  }
-
-  .gallery-thumbs {
-    gap: 6px;
-    padding: 6px;
-  }
-
-  .gallery-thumb {
-    width: 52px;
-    height: 36px;
-  }
-}
 
 /* ========== Mode Toggle Button ========== */
 .mode-toggle {
@@ -1216,99 +1154,6 @@ img {
   color: var(--color-text-light);
 }
 
-/* ========== Responsive (new elements) ========== */
-@media (max-width: 768px) {
-  .carousel-card {
-    width: 220px;
-  }
-  .carousel-card-img {
-    height: 140px;
-  }
-  .carousel-3d-section {
-    padding: 24px 12px 16px;
-  }
-  .carousel-3d-container {
-    padding: 10px 0 0;
-  }
-
-  .hero h1 {
-    font-size: 26px;
-  }
-
-  .stats-inner {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px 0;
-  }
-
-  .stat-item:nth-child(2) {
-    border-right: none;
-  }
-
-  .featured-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-bar-inner {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .contact-bar-info {
-    justify-content: center;
-  }
-
-  .floating-panel {
-    width: 260px;
-    right: -10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .carousel-card {
-    width: 180px;
-  }
-  .carousel-card-img {
-    height: 120px;
-  }
-  .carousel-card-label {
-    font-size: 13px;
-  }
-  .carousel-card-price {
-    font-size: 16px;
-  }
-
-  .car-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .header-inner {
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-start;
-  }
-
-  .filter-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .filter-group {
-    flex: none;
-  }
-
-  .filter-group select,
-  .filter-group input {
-    width: 100%;
-  }
-
-  .price-inputs input {
-    flex: 1;
-  }
-
-  .result-count {
-    margin-left: 0;
-  }
-}
 
 /* ========== Refresh Notification Bar ========== */
 .refresh-bar {
@@ -1560,12 +1405,684 @@ img {
   margin: 0 !important;
 }
 
-/* ========== 响应式：展厅 ========== */
-@media (max-width: 768px) {
-  .showcase-stage { flex-direction:column; padding:12px; }
-  .showcase-sidebar { width:100%; flex-direction:row; overflow-x:auto; gap:6px; }
-  .showcase-thumb { flex-shrink:0; width:130px; }
-  .showcase-title { font-size:20px; }
-  .showcase-car-name { font-size:15px; }
-  .showcase-car-price { font-size:18px; }
+/* ================================================================
+   MOBILE-FIRST RESPONSIVE STYLES
+   ================================================================ */
+
+/* ===== 640px: 手机端主断点 ===== */
+@media (max-width: 640px) {
+
+  /* --- 根变量调整 --- */
+  :root {
+    --radius: 8px;
+    --radius-sm: 4px;
+  }
+
+  /* --- Body --- */
+  body {
+    padding-bottom: 70px; /* 为底部导航留空间 */
+    font-size: 14px;
+  }
+
+  /* --- Header --- */
+  .header {
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+  }
+  .header-inner {
+    padding: 0 12px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .logo { font-size: 17px; gap: 4px; }
+  .logo-icon { font-size: 20px; }
+  .logo-img { height: 28px !important; }
+  .header-stats { font-size: 11px; }
+
+  /* --- 模式切换 --- */
+  .mode-toggle {
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 16px;
+  }
+
+  /* --- 展示厅 Hero --- */
+  .showcase-hero {
+    padding: 0;
+  }
+  .showcase-stage {
+    padding: 6px;
+    flex-direction: column;
+  }
+  .showcase-main {
+    flex: none;
+    width: 100%;
+  }
+  .showcase-title {
+    font-size: 18px;
+    margin-bottom: 2px;
+    padding: 0 4px;
+  }
+  .showcase-subtitle {
+    font-size: 11px;
+    margin-bottom: 6px;
+    padding: 0 4px;
+  }
+  .showcase-viewer-wrap {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+  .showcase-viewer {
+    padding-top: 66%;
+  }
+  .showcase-viewer .hint {
+    font-size: 9px;
+    bottom: 4px;
+    padding: 2px 8px;
+  }
+  .showcase-viewer-dots {
+    gap: 4px;
+    padding: 4px;
+  }
+  .showcase-viewer-dot {
+    width: 6px;
+    height: 6px;
+  }
+  .showcase-viewer-dot.active {
+    width: 14px;
+    border-radius: 3px;
+  }
+  .showcase-info-bar {
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .showcase-car-name { font-size: 14px; }
+  .showcase-car-price { font-size: 17px; }
+  .showcase-actions { gap: 6px; width: 100%; }
+  .showcase-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+    border-radius: 18px;
+    flex: 1;
+    text-align: center;
+  }
+  .showcase-nav { gap: 6px; margin-top: 8px; }
+  .showcase-arrow {
+    width: 36px; height: 36px;
+    font-size: 18px;
+    border-radius: 50%;
+  }
+  .showcase-strip { gap: 6px; }
+  .showcase-strip .dot {
+    width: 8px; height: 8px;
+  }
+  .showcase-strip .dot.active {
+    width: 16px;
+    border-radius: 4px;
+  }
+  .showcase-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 8px 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .showcase-sidebar::-webkit-scrollbar { display: none; }
+  .showcase-thumb {
+    flex-shrink: 0;
+    width: 110px;
+    padding: 8px;
+  }
+  .showcase-tag-3d {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+
+  /* --- 信息横幅 (横向滚动) --- */
+  .info-banner {
+    padding: 8px 12px;
+  }
+  .info-banner-inner {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    grid-template-columns: none; /* 覆盖 grid */
+  }
+  .info-banner-inner::-webkit-scrollbar { display: none; }
+  .info-card {
+    flex-shrink: 0;
+    width: 125px;
+    padding: 12px 10px;
+    border-radius: 10px;
+  }
+  .info-num { font-size: 20px; }
+  .info-label { font-size: 10px; }
+  .info-card-contact .info-num { font-size: 12px; }
+
+  /* --- 精选推荐 (横向滚动) --- */
+  .featured-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 0 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+  }
+  .featured-grid::-webkit-scrollbar { display: none; }
+  .featured-card {
+    flex-shrink: 0;
+    width: 260px;
+    scroll-snap-align: start;
+  }
+  .featured-img { height: 160px; }
+  .featured-overlay { padding-top: 30px; }
+  .featured-brand { font-size: 14px; }
+  .featured-price { font-size: 18px; }
+  .featured-body { padding: 8px 10px; }
+  .featured-body .meta-item { font-size: 11px; }
+
+  /* --- 品牌药丸 (横向滚动) --- */
+  .brand-pills-section {
+    padding: 0 12px;
+  }
+  .brand-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 4px 0 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .brand-pills::-webkit-scrollbar { display: none; }
+  .brand-pill {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: 16px;
+  }
+  .brand-pill-all {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  /* --- 车辆网格 --- */
+  .car-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 0 12px;
+  }
+
+  /* --- 车辆卡片 (水平布局) --- */
+  .car-card {
+    display: flex;
+    flex-direction: row;
+    border-radius: 8px;
+    overflow: hidden;
+    contain: content;
+  }
+  .car-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-card);
+  }
+  .card-img {
+    width: 130px;
+    flex-shrink: 0;
+    padding-top: 0;
+    height: 105px;
+    position: relative;
+  }
+  .card-img img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .card-year-tag {
+    font-size: 10px;
+    padding: 2px 5px;
+    top: 6px; left: 6px;
+  }
+  .badge-360 {
+    font-size: 9px;
+    padding: 2px 5px;
+    bottom: 6px; right: 6px;
+    top: auto; left: auto;
+  }
+  .card-body {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .card-title {
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .card-price {
+    font-size: 17px;
+    margin-bottom: 4px;
+  }
+  .card-price small { font-size: 11px; }
+  .card-meta {
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .meta-item {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .card-footer {
+    display: none;
+  }
+
+  /* --- 选车模式筛选栏 --- */
+  .filter-bar {
+    padding: 0 12px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .filter-group {
+    flex: 1 1 45%;
+    min-width: 0;
+  }
+  .filter-label {
+    font-size: 10px;
+  }
+  .filter-group select,
+  .filter-group input {
+    font-size: 12px;
+    padding: 7px 8px;
+    width: 100%;
+  }
+  .price-inputs {
+    gap: 4px;
+  }
+  .price-inputs input {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+    font-size: 12px;
+    padding: 7px 6px;
+  }
+  .btn-reset {
+    font-size: 11px;
+    padding: 6px 12px;
+    align-self: flex-end;
+  }
+  .result-count {
+    font-size: 11px;
+    margin-left: 0;
+    width: 100%;
+  }
+  .empty-state {
+    padding: 40px 16px;
+  }
+  .empty-state .icon { font-size: 36px; }
+
+  /* --- 详情页 --- */
+  .detail-container {
+    padding: 0;
+  }
+  .detail-card {
+    padding: 16px;
+    border-radius: 0;
+  }
+  .detail-header {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .detail-title { font-size: 17px; }
+  .detail-price { font-size: 22px; }
+  .info-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .detail-section h3 {
+    font-size: 14px;
+  }
+  .detail-section p {
+    font-size: 13px;
+  }
+  .contact-box {
+    font-size: 14px;
+    padding: 12px;
+  }
+
+  /* --- 3D 查看器 (详情页) --- */
+  .spin3d-container {
+    margin: 0;
+    border-radius: 0;
+  }
+  .spin3d-viewer {
+    padding-top: 75%;
+  }
+  .spin3d-hint {
+    font-size: 10px;
+    bottom: 6px;
+  }
+  .spin3d-dots {
+    gap: 4px;
+    padding: 4px;
+  }
+  .spin3d-dot {
+    width: 6px; height: 6px;
+  }
+  .spin3d-dot.active {
+    width: 14px;
+    border-radius: 3px;
+  }
+  .spin3d-toolbar {
+    gap: 6px;
+    padding: 8px;
+  }
+  .spin3d-toolbar button {
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 16px;
+  }
+  .spin3d-auto-btn {
+    font-size: 10px;
+  }
+
+  /* --- 图片画廊 --- */
+  .gallery-main {
+    height: 240px;
+  }
+  .gallery-nav {
+    width: 32px; height: 32px;
+    font-size: 18px;
+  }
+  .gallery-thumbs {
+    gap: 4px;
+    padding: 4px;
+  }
+  .gallery-thumb {
+    width: 44px; height: 32px;
+  }
+
+  /* --- 联系栏 --- */
+  .ct-sec {
+    padding: 0 12px;
+    margin-top: 20px;
+  }
+  .ct-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 16px;
+    border-radius: 10px;
+  }
+  .ct-right {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  .ct-item { font-size: 13px; }
+  .ct-btn {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* --- 浮动联系按钮 --- */
+  .floating-contact {
+    bottom: 76px;
+    right: 12px;
+  }
+  .floating-btn {
+    width: 48px; height: 48px;
+    font-size: 20px;
+    border-radius: 50%;
+  }
+  .floating-panel {
+    width: 280px;
+    right: 0;
+    bottom: 60px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.2);
+  }
+  .floating-panel.show {
+    display: block;
+  }
+
+  /* --- 联系面板 (ActionSheet风格) --- */
+  .contact-sheet {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 1100;
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 24px rgba(0,0,0,.12);
+    transform: translateY(100%);
+    transition: transform .3s ease;
+    padding: 16px 20px 24px;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+  .contact-sheet.open {
+    transform: translateY(0);
+  }
+  .contact-sheet-handle {
+    width: 36px; height: 4px;
+    border-radius: 2px;
+    background: #ddd;
+    margin: 0 auto 16px;
+  }
+  .contact-sheet-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,.4);
+    z-index: 1099;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  .contact-sheet-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .contact-sheet-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .contact-sheet-content .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  .contact-sheet-content .contact-row:active {
+    background: #eee;
+  }
+  .contact-sheet-content .contact-row .icon {
+    font-size: 22px;
+    width: 36px;
+    text-align: center;
+  }
+  .contact-sheet-content .contact-row.call-row {
+    background: #e63946;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* --- 底部导航栏 --- */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    background: #fff;
+    border-top: 1px solid #eee;
+    padding: 5px 0;
+    padding-bottom: calc(5px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -2px 12px rgba(0,0,0,.06);
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 4px 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #999;
+    transition: color .2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-item.active { color: #e63946; }
+  .nav-item:active { opacity: .7; }
+  .nav-icon { font-size: 22px; line-height: 1; }
+  .nav-label { font-size: 10px; font-weight: 500; }
+
+  /* --- 刷新栏 --- */
+  .refresh-bar {
+    font-size: 12px;
+    padding: 10px 16px;
+  }
+
+  /* --- Section Header --- */
+  .section-header {
+    padding: 0 12px;
+    margin-bottom: 8px;
+  }
+  .section-header h2 {
+    font-size: 15px;
+  }
+  .more {
+    font-size: 11px;
+  }
+
+  /* --- WeChat X5 内核优化 --- */
+  .brand-pills,
+  .featured-grid,
+  .info-banner-inner,
+  .showcase-sidebar {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+
+  /* --- 触控优化 --- */
+  .car-card:active,
+  .featured-card:active,
+  .info-card:active {
+    opacity: .9;
+    transform: scale(.98);
+  }
+  .brand-pill:active,
+  .nav-item:active {
+    opacity: .7;
+  }
 }
+
+/* ===== 768px: 平板竖屏 ===== */
+@media (max-width: 768px) {
+  .car-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .card-body { padding: 10px 12px; }
+  .card-title { font-size: 13px; }
+  .card-price { font-size: 17px; }
+
+  .filter-bar { gap: 8px; }
+  .filter-group select,
+  .filter-group input {
+    min-width: auto;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+  .price-inputs input { width: 70px; }
+
+  .detail-card { padding: 20px; }
+  .detail-title { font-size: 18px; }
+  .detail-price { font-size: 24px; }
+  .gallery-thumbs { gap: 6px; padding: 6px; }
+  .gallery-thumb { width: 52px; height: 36px; }
+
+  .featured-grid { grid-template-columns: 1fr; }
+
+  .floating-panel {
+    width: 260px;
+    right: -10px;
+  }
+
+  /* 平板展示厅 */
+  .showcase-stage { flex-direction: column; padding: 12px; }
+  .showcase-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+  }
+  .showcase-thumb { flex-shrink: 0; width: 130px; }
+  .showcase-title { font-size: 20px; }
+
+  /* 信息横幅平板 */
+  .info-banner-inner {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .info-num { font-size: 20px; }
+
+  /* 联系卡平板 */
+  .ct-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .ct-right { justify-content: center; }
+}
+
+/* ===== 769px+: 桌面端 ===== */
+@media (min-width: 769px) {
+  .bottom-nav { display: none; }
+  .contact-sheet { display: none; }
+  .contact-sheet-backdrop { display: none; }
+}
+
+/* ===== 1024px: 大屏笔记本 ===== */
+@media (max-width: 1024px) {
+  .car-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+}
+
+/* ===== 480px: 极小屏 ===== */
+@media (max-width: 480px) {
+  .showcase-viewer { padding-top: 75%; }
+  .showcase-title { font-size: 16px; }
+  .showcase-car-name { font-size: 13px; }
+  .showcase-car-price { font-size: 15px; }
+  .showcase-btn { padding: 7px 10px; font-size: 11px; }
+  .info-card { width: 110px; padding: 10px 8px; }
+  .info-num { font-size: 18px; }
+  .info-card-contact .info-num { font-size: 10px; }
+  .featured-card { width: 230px; }
+  .featured-img { height: 140px; }
+  .card-img { width: 110px; height: 90px; }
+  .card-title { font-size: 13px; }
+  .card-price { font-size: 15px; }
+  .floating-panel { width: 260px; }
+}
+
