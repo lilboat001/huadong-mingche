@@ -1560,9 +1560,9 @@ img {
     padding: 10px 6px;
     border-radius: 8px;
   }
-  .info-num { font-size: 18px; word-break: break-all; }
+  .info-num { font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .info-label { font-size: 10px; }
-  .info-card-contact .info-num { font-size: 11px; letter-spacing: -0.5px; }
+  .info-card-contact .info-num { font-size: 12px; }
 
   /* --- 精选推荐 (主打头部) --- */
   .featured-section { margin-top: 4px; }
@@ -1632,6 +1632,7 @@ img {
   .car-card {
     display: flex;
     flex-direction: row;
+    align-items: stretch;
     border-radius: 8px;
     overflow: hidden;
     contain: content;
@@ -1644,9 +1645,10 @@ img {
     width: 130px;
     flex-shrink: 0;
     padding-top: 0;
-    height: 105px;
+    min-height: 100px;
     position: relative;
     background: #eee;
+    align-self: stretch;
   }
   .card-img img {
     position: absolute;
@@ -2090,7 +2092,7 @@ img {
   .info-card-contact .info-num { font-size: 10px; }
   .featured-card { width: 230px; }
   .featured-img { height: 140px; }
-  .card-img { width: 110px; height: 90px; }
+  .card-img { width: 110px; min-height: 90px; }
   .card-title { font-size: 13px; }
   .card-price { font-size: 15px; }
   .floating-panel { width: 260px; }
