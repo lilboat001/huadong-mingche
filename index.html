@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>衢州华东名车</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.ct-sec{max-width:1260px;margin:36px auto 0;padding:0 20px}
+.ct-card{background:#fff;border-radius:14px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;box-shadow:0 1px 10px rgba(0,0,0,.04);border:1px solid #eee}
+.ct-left h3{font-size:18px;font-weight:700;color:#2d3436;margin-bottom:4px}
+.ct-left p{font-size:13px;color:#888}
+.ct-right{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.ct-item{display:flex;align-items:center;gap:8px;font-size:14px;color:#333}
+.ct-icon{width:34px;height:34px;border-radius:50%;background:#fef2f2;display:flex;align-items:center;justify-content:center;font-size:15px}
+.ct-btn{padding:11px 24px;background:#e63946;color:#fff;border-radius:22px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;white-space:nowrap}
+.ct-btn:hover{background:#c1121f;transform:scale(1.03)}
+.showcase-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px}
+.showcase-arrow{width:40px;height:40px;border-radius:50%;border:2px solid #ddd;background:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;color:#555;flex-shrink:0}
+.showcase-arrow:hover{background:#e63946;color:#fff;border-color:#e63946}
+.showcase-strip{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+.showcase-strip .dot{width:10px;height:10px;border-radius:50%;background:#ddd;cursor:pointer;transition:all .2s}
+.showcase-strip .dot.active{background:#e63946;width:22px;border-radius:5px}
+.top-strip{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 20px;background:#fafafa;border-bottom:1px solid #f0f0f0;font-size:13px;color:#666;flex-wrap:wrap}
+.top-strip-item strong{color:#333;font-weight:600}
+.top-strip-sep{color:#ddd;font-size:10px}
+.info-banner{max-width:1260px;margin:0 auto;padding:14px 20px}
+.info-banner-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.info-card{background:#fff;border-radius:12px;padding:16px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.04);border:1px solid #f2f2f2;transition:transform .2s}
+.info-card:hover{transform:translateY(-2px)}
+.info-num{display:block;font-size:24px;font-weight:700;color:#e63946;line-height:1.2}
+.info-label{display:block;font-size:12px;color:#888;margin-top:4px}
+.info-icon{font-size:22px;display:block;margin-bottom:2px}
+.info-card-contact .info-num{font-size:16px}
+@media(max-width:768px){.info-banner-inner{grid-template-columns:repeat(2,1fr)}.info-num{font-size:20px}}
+@media(max-width:768px){.ct-card{flex-direction:column;text-align:center}.ct-right{justify-content:center}}
+</style>
+</head>
+<body>
+
+<div class="refresh-bar" id="refreshBar">数据已更新 <button id="btnRefreshNow">🔄 刷新</button></div>
+
+<!-- ====== 展厅模式 ====== -->
+<div class="view-mode" id="showroomMode">
+
+  <!-- 3D展台 -->
+  <section class="showcase-hero" style="margin-top:0;padding-top:0">
+    <div class="showcase-stage" style="padding-top:0">
+      <div class="showcase-main">
+        <h1 class="showcase-title" style="margin-top:0">品质<span>二手车</span></h1>
+        <p class="showcase-subtitle">严选好车 · 车况透明 · 品质保证</p>
+        <div class="showcase-viewer-wrap">
+          <div class="showcase-viewer" id="scViewer"><img src="" alt="" id="scImg"><div class="hint">↔ 左右拖拽旋转</div></div>
+          <div class="showcase-viewer-dots" id="scDots"></div>
+          <div class="showcase-info-bar">
+            <div><div class="showcase-car-name" id="scName"></div><div class="showcase-car-price" id="scPrice"></div></div>
+            <div class="showcase-actions">
+              <button class="showcase-btn primary" id="scDetailBtn">查看详情</button>
+              <a href="tel:15967800642" class="showcase-btn outline">📞 立即咨询</a>
+            </div>
+          </div>
+        </div>
+        <div class="showcase-nav">
+          <button class="showcase-arrow" id="scPrev">‹</button>
+          <div class="showcase-strip" id="scStrip"></div>
+          <button class="showcase-arrow" id="scNext">›</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <header class="header" style="position:static;box-shadow:none;border-bottom:1px solid #f0f0f0">
+    <div class="header-inner">
+      <div class="logo">
+        <img src="images/logo.png" alt="logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display=''">
+        <span class="logo-text" style="display:none"><span class="logo-icon">🚗</span> 衢州<span>华东名车</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="header-stats" id="headerStats"></div>
+        <button class="mode-toggle" id="modeToggle">📋 选车模式</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="info-banner">
+    <div class="info-banner-inner">
+      <div class="info-card">
+        <span class="info-num" id="statCount">8</span>
+        <span class="info-label">在售车源</span>
+      </div>
+      <div class="info-card">
+        <span class="info-num" id="statBrands">7</span>
+        <span class="info-label">品牌选择</span>
+      </div>
+      <div class="info-card info-card-contact">
+        <span class="info-icon">📞</span>
+        <span class="info-num">15967800642</span>
+        <span class="info-label">咨询热线</span>
+      </div>
+      <div class="info-card info-card-contact">
+        <span class="info-icon">💬</span>
+        <span class="info-num">15967800642</span>
+        <span class="info-label">微信同号</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="featured-section"><div class="section-header"><h2>🔥 精选推荐</h2></div><div class="featured-grid" id="featuredGrid"></div></section>
+  <div class="brand-pills-section"><div class="section-header"><h2>🚙 按品牌浏览</h2></div><div class="brand-pills" id="brandPills"><button class="brand-pill brand-pill-all active">全部</button></div></div>
+  <section class="featured-section"><div class="section-header"><h2>📋 全部车源</h2><span class="more" id="showroomCount"></span></div><div class="car-grid" id="showroomGrid"></div></section>
+  <div class="ct-sec"><div class="ct-card">
+    <div class="ct-left"><h3>💬 想买好车？联系我们</h3><p>衢州华东名车 · 专业顾问一对一服务</p></div>
+    <div class="ct-right"><div class="ct-item"><span class="ct-icon">📞</span>15967800642</div><div class="ct-item"><span class="ct-icon">💬</span>微信同号</div><div class="ct-item"><span class="ct-icon">🕐</span>全天24小时</div><a href="tel:15967800642" class="ct-btn">📞 立即咨询</a></div>
+  </div></div>
+</div>
+
+<!-- ====== 选车模式 ====== -->
+<div class="view-mode" id="selectMode" style="display:none">
+  <header class="header" style="position:static;box-shadow:none;border-bottom:1px solid #f0f0f0">
+    <div class="header-inner">
+      <div class="logo">
+        <img src="images/logo.png" alt="logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display=''">
+        <span class="logo-text" style="display:none"><span class="logo-icon">🚗</span> 衢州<span>华东名车</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="header-stats" id="headerStats2"></div>
+        <button class="mode-toggle" id="modeToggle2">✨ 展厅模式</button>
+      </div>
+    </div>
+  </header>
+  <div class="filter-bar">
+    <div class="filter-group"><label class="filter-label">品牌</label><select id="filterBrand"><option value="">全部</option></select></div>
+    <div class="filter-group"><label class="filter-label">变速箱</label><select id="filterTransmission"><option value="">全部</option><option value="自动">自动</option><option value="手动">手动</option></select></div>
+    <div class="filter-group"><label class="filter-label">燃料</label><select id="filterFuel"><option value="">全部</option></select></div>
+    <div class="filter-group"><label class="filter-label">价格(万元)</label><div class="price-inputs"><input type="number" id="priceMin" placeholder="最低"><span>—</span><input type="number" id="priceMax" placeholder="最高"></div></div>
+    <button class="btn-reset" id="btnReset">重置</button>
+    <span class="result-count" id="resultCount"></span>
+  </div>
+  <div class="car-grid" id="carGrid"></div>
+  <div class="empty-state" id="emptyState" style="display:none"><div class="icon">🔍</div><p>没有匹配的车辆</p></div>
+  <div class="ct-sec"><div class="ct-card">
+    <div class="ct-left"><h3>💬 想买好车？联系我们</h3><p>衢州华东名车 · 专业顾问一对一服务</p></div>
+    <div class="ct-right"><div class="ct-item"><span class="ct-icon">📞</span>15967800642</div><div class="ct-item"><span class="ct-icon">💬</span>微信同号</div><div class="ct-item"><span class="ct-icon">🕐</span>全天24小时</div><a href="tel:15967800642" class="ct-btn">📞 立即咨询</a></div>
+  </div></div>
+</div>
+
+<div class="detail-container" id="detailPage" style="display:none"></div>
+
+<div class="floating-contact">
+  <button class="floating-btn" id="floatingBtn">💬</button>
+  <div class="floating-panel" id="floatingPanel">
+    <button class="close-panel" id="closePanel">✕</button><h4>📬 联系我们</h4>
+    <div class="contact-row"><span class="icon">📞</span><a href="tel:15967800642" style="color:inherit;text-decoration:none">15967800642</a></div>
+    <div class="contact-row"><span class="icon">💬</span>微信：15967800642</div>
+    <div class="contact-row"><span class="icon">🕐</span>全天 24小时在线</div>
+    <div class="qr-placeholder">📱<br>微信扫码添加</div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+(function(){
+var cars=[],curCar=null,curImg=0,scList=[],scIdx=0,scIs3D=false,scImgs=[],scTimer=null,ss={cur:0,imgs:[],timer:null};
+var $=function(id){return document.getElementById(id)};
+var s=localStorage.getItem('car_inventory');
+if(s){try{cars=JSON.parse(s)}catch(e){cars=window.CAR_DATA||[]}}else{cars=window.CAR_DATA||[]}
+
+function init(){
+  initFilters();initBrandPills();updateStats();initShowcase();renderFeatured();renderShowroomGrid(cars);
+  (localStorage.getItem('car_view_mode')==='select'?goSelect:goShowroom)();
+  $('btnRefreshNow').addEventListener('click',function(){location.reload()});
+  $('modeToggle').addEventListener('click',goSelect);
+  $('modeToggle2').addEventListener('click',goShowroom);
+  window.addEventListener('storage',function(e){if(e.key==='car_inventory')location.reload()});
+}
+function goShowroom(){$('showroomMode').style.display='';$('selectMode').style.display='none';localStorage.setItem('car_view_mode','showroom');startScAuto()}
+function goSelect(){$('showroomMode').style.display='none';$('selectMode').style.display='';localStorage.setItem('car_view_mode','select');stopScAuto();applyFilters()}
+
+function initShowcase(){
+  scList=cars.filter(function(c){return c.spin3d&&c.spin3d.enabled&&c.spin3d.images&&c.spin3d.images.length>=4});
+  scIs3D=scList.length>0;if(!scIs3D){scList=cars.slice(0,Math.min(4,cars.length))}
+  if(!scList.length)return;
+  renderScStrip();showScCar(0);
+  $('scPrev').addEventListener('click',function(){showScCar((scIdx-1+scList.length)%scList.length);stopScAuto()});
+  $('scNext').addEventListener('click',function(){showScCar((scIdx+1)%scList.length);stopScAuto()});
+}
+function renderScStrip(){$('scStrip').innerHTML=scList.map(function(_,i){return'<span class="dot'+(i===0?' active':'')+'" onclick="A.showSc('+i+')"></span>'}).join('')}
+function showScCar(idx){
+  scIdx=idx;var c=scList[idx];stopScAuto();
+  $('scName').textContent=c.brand+' '+c.model;$('scPrice').innerHTML=(c.price/10000).toFixed(2)+'<small>万元</small>';
+  $('scDetailBtn').onclick=function(){showDetail(c.id)};
+  $('scStrip').querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('active',i===idx)});
+  if(scIs3D){scImgs=c.spin3d.images;$('scImg').src=scImgs[0];$('scDots').innerHTML=scImgs.map(function(_,i){return'<span class="showcase-viewer-dot'+(i===0?' active':'')+'"></span>'}).join('');setupScSpin();startScAuto()}
+  else{scImgs=[c.images[0]];$('scImg').src=c.images[0]||'';$('scDots').innerHTML='';$('scViewer').querySelector('.hint').textContent=''}
+}
+function setupScSpin(){
+  var img=$('scImg'),v=$('scViewer'),h=v.querySelector('.hint');h.textContent='↔ 左右拖拽旋转';v.style.cursor='ew-resize';
+  var cur=0,drag=false,sx=0,sf=0;
+  function upd(i){cur=((i%scImgs.length)+scImgs.length)%scImgs.length;img.src=scImgs[cur];$('scDots').querySelectorAll('.showcase-viewer-dot').forEach(function(d,j){d.classList.toggle('active',j===cur)})}
+  v.onmousedown=function(e){drag=true;sx=e.clientX;sf=cur;h.style.opacity='0';stopScAuto();e.preventDefault()};
+  document.onmousemove=function(e){if(!drag)return;upd(sf+Math.round((e.clientX-sx)/12))};
+  document.onmouseup=function(){drag=false};
+  v.ontouchstart=function(e){drag=true;sx=e.touches[0].clientX;sf=cur;h.style.opacity='0';stopScAuto()};
+  v.ontouchmove=function(e){if(!drag)return;upd(sf+Math.round((e.touches[0].clientX-sx)/12))};
+  v.ontouchend=function(){drag=false};
+}
+function startScAuto(){stopScAuto();if(!scIs3D||scImgs.length<2)return;scTimer=setInterval(function(){var i=$('scImg').src;var c=scImgs.indexOf(i);if(c<0)c=0;var n=(c+1)%scImgs.length;$('scImg').src=scImgs[n];$('scDots').querySelectorAll('.showcase-viewer-dot').forEach(function(d,j){d.classList.toggle('active',j===n)})},2000)}
+function stopScAuto(){clearInterval(scTimer)}
+
+function updateStats(){
+  var t='共 '+cars.length+' 辆',b=new Set(cars.map(function(c){return c.brand})).size;
+  $('headerStats').textContent=t;$('headerStats2').textContent=t;
+  $('statCount').textContent=cars.length;$('statBrands').textContent=b;
+}
+function initBrandPills(){
+  var brands=[...new Set(cars.map(function(c){return c.brand}))].sort(),p=$('brandPills');
+  brands.forEach(function(b){var btn=document.createElement('button');btn.className='brand-pill';btn.textContent=b;btn.addEventListener('click',function(){p.querySelectorAll('.brand-pill').forEach(function(x){x.classList.remove('active')});btn.classList.add('active');renderShowroomGrid(cars.filter(function(c){return c.brand===b}))});p.appendChild(btn)});
+  p.querySelector('.brand-pill-all').addEventListener('click',function(){p.querySelectorAll('.brand-pill').forEach(function(x){x.classList.remove('active')});this.classList.add('active');renderShowroomGrid(cars)});
+}
+function renderFeatured(){$('featuredGrid').innerHTML=cars.slice(0,4).map(function(c){var p=(c.price/10000).toFixed(2);return'<div class="featured-card" onclick="A.detail('+c.id+')"><div class="featured-img"><img src="'+(c.images[0]||'')+'" loading="lazy" onerror="this.parentElement.style.background=\'linear-gradient(135deg,#1a1a2e,#c1121f)\'"><div class="featured-overlay"><span class="featured-brand">'+c.brand+' '+c.model+'</span><span class="featured-price">'+p+'万</span></div></div><div class="featured-body"><span class="meta-item">📅 '+(c.year||'')+'年</span><span class="meta-item">📏 '+(c.mileage||'')+'万km</span><span class="meta-item">⚙️ '+c.transmission+'</span><span class="meta-item">📍 '+(c.location||'')+'</span></div></div>'}).join('')}
+function renderShowroomGrid(list){$('showroomCount').textContent='共 '+list.length+' 辆';$('showroomGrid').innerHTML=list.length?list.map(function(c){var p=(c.price/10000).toFixed(2);return'<div class="car-card" onclick="A.detail('+c.id+')"><div class="card-img"><img src="'+(c.images[0]||'')+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:28px>🚗</div>\'"><div class="card-year-tag">'+(c.year||'')+'年</div>'+(c.spin3d&&c.spin3d.enabled?'<div class="badge-360">360°</div>':'')+'</div><div class="card-body"><div class="card-title">'+c.brand+' '+c.model+'</div><div class="card-price">'+p+'<small>万元</small></div><div class="card-meta"><span class="meta-item">📏 '+(c.mileage||'')+'万km</span><span class="meta-item">⚙️ '+c.transmission+'</span><span class="meta-item">⛽ '+c.fuel+'</span></div></div><div class="card-footer"><span>📍 '+(c.location||'')+'</span><span>'+(c.displacement||'')+'</span></div></div>'}).join(''):'<div class="empty-state"><div class="icon">🔍</div><p>暂无车源</p></div>'}
+function initFilters(){
+  [...new Set(cars.map(function(c){return c.brand}))].sort().forEach(function(b){var o=document.createElement('option');o.value=b;o.textContent=b;$('filterBrand').appendChild(o)});
+  [...new Set(cars.map(function(c){return c.fuel}))].sort().forEach(function(f){var o=document.createElement('option');o.value=f;o.textContent=f;$('filterFuel').appendChild(o)});
+}
+function applyFilters(){var f={brand:$('filterBrand').value,trans:$('filterTransmission').value,fuel:$('filterFuel').value,min:$('priceMin').value?+$('priceMin').value:0,max:$('priceMax').value?+$('priceMax').value:Infinity};renderSelectGrid(cars.filter(function(c){if(f.brand&&c.brand!==f.brand)return false;if(f.trans&&c.transmission!==f.trans)return false;if(f.fuel&&c.fuel!==f.fuel)return false;var p=c.price/10000;return p>=f.min&&p<=f.max}))}
+$('filterBrand').addEventListener('change',applyFilters);$('filterTransmission').addEventListener('change',applyFilters);$('filterFuel').addEventListener('change',applyFilters);$('priceMin').addEventListener('input',applyFilters);$('priceMax').addEventListener('input',applyFilters);
+$('btnReset').addEventListener('click',function(){$('filterBrand').value='';$('filterTransmission').value='';$('filterFuel').value='';$('priceMin').value='';$('priceMax').value='';renderSelectGrid(cars)});
+function renderSelectGrid(list){$('detailPage').style.display='none';if(!list.length){$('carGrid').style.display='none';$('emptyState').style.display='';$('resultCount').textContent='0个结果'}else{$('carGrid').style.display='';$('emptyState').style.display='none';$('resultCount').textContent=list.length+'个车源';$('carGrid').innerHTML=list.map(function(c){var p=(c.price/10000).toFixed(2);return'<div class="car-card" onclick="A.detail('+c.id+')"><div class="card-img"><img src="'+(c.images[0]||'')+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:28px>🚗</div>\'"><div class="card-year-tag">'+(c.year||'')+'年</div>'+(c.spin3d&&c.spin3d.enabled?'<div class="badge-360">360°</div>':'')+'</div><div class="card-body"><div class="card-title">'+c.brand+' '+c.model+'</div><div class="card-price">'+p+'<small>万元</small></div><div class="card-meta"><span class="meta-item">📏 '+(c.mileage||'')+'万km</span><span class="meta-item">⚙️ '+c.transmission+'</span><span class="meta-item">⛽ '+c.fuel+'</span></div></div><div class="card-footer"><span>📍 '+(c.location||'')+'</span><span>'+(c.displacement||'')+'</span></div></div>'}).join('')}}
+
+function showDetail(id){
+  var c=cars.find(function(x){return x.id===id});if(!c)return;curCar=c;curImg=0;var p=(c.price/10000).toFixed(2),h3=c.spin3d&&c.spin3d.enabled&&c.spin3d.images&&c.spin3d.images.length>=4;
+  $('showroomMode').style.display='none';$('selectMode').style.display='none';$('detailPage').style.display='';stopScAuto();
+  $('detailPage').innerHTML='<button class="btn-back" onclick="A.back()">← 返回</button>'+
+    (h3?'<div class="spin3d-container" id="sd"><div class="spin3d-viewer" id="sv"><img src="'+c.spin3d.images[0]+'" id="si" alt=""><div class="spin3d-hint">↔ 左右拖拽旋转</div></div><div class="spin3d-dots" id="sdd">'+c.spin3d.images.map(function(_,i){return'<span class="spin3d-dot'+(i===0?' active':'')+'"></span>'}).join('')+'</div><div class="spin3d-toolbar"><button onclick="A.spPrev()">◀ 上一个</button><button class="spin3d-auto-btn" id="sab" onclick="A.spAuto()">▶ 自动旋转</button><button onclick="A.spNext()">下一个 ▶</button></div></div>'
+    :'<div class="gallery"><div class="gallery-main"><img src="'+c.images[0]+'" id="gm" alt=""></div>'+(c.images.length>1?'<button class="gallery-nav prev" onclick="A.gPrev()">‹</button><button class="gallery-nav next" onclick="A.gNext()">›</button>':'')+'<div class="gallery-thumbs">'+c.images.map(function(im,i){return'<div class="gallery-thumb'+(i===0?' active':'')+'" onclick="A.gThumb('+i+')"><img src="'+im+'" alt=""></div>'}).join('')+'</div></div>')+
+    '<div class="detail-card"><div class="detail-header"><div class="detail-title">'+c.brand+' '+c.model+'</div><div class="detail-price">'+p+'<small>万元</small></div></div><table class="info-table"><tr><td>年份</td><td>'+c.year+'年</td></tr><tr><td>里程</td><td>'+c.mileage+'万km</td></tr><tr><td>变速箱</td><td>'+c.transmission+'</td></tr><tr><td>燃料</td><td>'+c.fuel+'</td></tr><tr><td>排量</td><td>'+c.displacement+'</td></tr><tr><td>颜色</td><td>'+c.color+'</td></tr><tr><td>所在地</td><td>📍 '+c.location+'</td></tr></table><div class="detail-section"><h3>车况描述</h3><p>'+c.description+'</p></div><div class="contact-box">📞 联系电话：<span class="contact-phone">15967800642</span></div></div>';
+  if(h3){initSpin3(c.spin3d.images);setTimeout(setupSpin3,100)}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function initSpin3(imgs){ss.imgs=imgs;ss.cur=0;clearInterval(ss.timer)}
+function updSpin3(i){if(!ss.imgs.length)return;ss.cur=((i%ss.imgs.length)+ss.imgs.length)%ss.imgs.length;var im=$('si');if(im)im.src=ss.imgs[ss.cur];document.querySelectorAll('#sdd .spin3d-dot').forEach(function(d,j){d.classList.toggle('active',j===ss.cur)})}
+function spPrev(){updSpin3(ss.cur-1);stopSpin3()}function spNext(){updSpin3(ss.cur+1);stopSpin3()}
+function spAuto(){var b=$('sab');if(ss.timer){stopSpin3();if(b){b.textContent='▶ 自动旋转';b.classList.remove('playing')}return}if(b){b.textContent='⏸ 停止';b.classList.add('playing')}ss.timer=setInterval(function(){updSpin3(ss.cur+1)},150)}
+function stopSpin3(){clearInterval(ss.timer);ss.timer=null}
+function setupSpin3(){var v=$('sv');if(!v)return;var h=v.querySelector('.spin3d-hint'),drag=false,sx=0,sf=0;v.addEventListener('mousedown',function(e){drag=true;sx=e.clientX;sf=ss.cur;v.style.cursor='grabbing';h.style.opacity='0';stopSpin3();e.preventDefault()});document.addEventListener('mousemove',function(e){if(!drag)return;updSpin3(sf+Math.round((e.clientX-sx)/12))});document.addEventListener('mouseup',function(){if(drag){drag=false;v.style.cursor='ew-resize'}});v.addEventListener('touchstart',function(e){drag=true;sx=e.touches[0].clientX;sf=ss.cur;h.style.opacity='0';stopSpin3()});v.addEventListener('touchmove',function(e){if(!drag)return;updSpin3(sf+Math.round((e.touches[0].clientX-sx)/12))});v.addEventListener('touchend',function(){drag=false})}
+function gThumb(i){if(!curCar)return;curImg=i;var m=$('gm');if(m)m.src=curCar.images[i];document.querySelectorAll('.gallery-thumb').forEach(function(t,j){t.classList.toggle('active',j===i)})}
+function gPrev(){if(!curCar)return;gThumb((curImg-1+curCar.images.length)%curCar.images.length)}
+function gNext(){if(!curCar)return;gThumb((curImg+1)%curCar.images.length)}
+function goBack(){$('detailPage').style.display='none';curCar=null;if(localStorage.getItem('car_view_mode')==='select'){$('selectMode').style.display='';applyFilters()}else{$('showroomMode').style.display='';startScAuto()}}
+
+$('floatingBtn').addEventListener('click',function(){$('floatingPanel').classList.toggle('show')});
+$('closePanel').addEventListener('click',function(){$('floatingPanel').classList.remove('show')});
+document.addEventListener('click',function(e){if($('floatingPanel').classList.contains('show')&&!e.target.closest('.floating-contact'))$('floatingPanel').classList.remove('show')});
+
+window.A={detail:showDetail,showSc:showScCar,back:goBack,gThumb:gThumb,gPrev:gPrev,gNext:gNext,spPrev:spPrev,spNext:spNext,spAuto:spAuto};
+init();
+})();
+</script>
+</body>
+</html>
