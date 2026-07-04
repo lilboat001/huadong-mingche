@@ -68,6 +68,18 @@ tr:hover td{background:#fafafa}
 </head>
 <body>
 
+<!-- 密码门禁 -->
+<div id="pwGate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,46,.98);z-index:99999;display:flex;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:12px;padding:36px 28px;text-align:center;width:340px;box-shadow:0 10px 40px rgba(0,0,0,.5)">
+    <div style="font-size:44px;margin-bottom:12px">🔐</div>
+    <h2 style="margin-bottom:6px;font-size:18px">管理后台登录</h2>
+    <p style="color:#888;font-size:12px;margin-bottom:16px">衢州华东名车</p>
+    <input type="password" id="pwInput" placeholder="请输入密码" style="width:100%;padding:10px 14px;border:2px solid #ddd;border-radius:8px;font-size:15px;text-align:center;margin-bottom:8px" onkeydown="if(event.key==='Enter')checkPw()">
+    <p id="pwErr" style="color:#e63946;font-size:11px;margin-bottom:8px;display:none">密码错误</p>
+    <button onclick="checkPw()" style="width:100%;padding:10px;background:#e63946;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;font-weight:600">进入后台</button>
+  </div>
+</div>
+
 <header class="bar">
   <h1><img src="images/logo.png" alt="logo" style="height:26px" onerror="this.style.display='none'"> 🚗 衢州华东名车 · 管理后台</h1>
   <div style="display:flex;gap:14px;align-items:center">
@@ -128,7 +140,9 @@ tr:hover td{background:#fafafa}
       <button class="btn btn-out btn-sm" onclick="doExport()">📥 导出</button>
       <button class="btn btn-out btn-sm" onclick="document.getElementById('impFile').click()">📤 导入</button>
       <input type="file" id="impFile" accept=".json" style="display:none" onchange="doImport(event)">
+      <button class="btn btn-sm" style="background:#2ea44f;color:#fff" onclick="doPublish()">🚀 发布到网站</button>
     </div>
+    <div id="pubStatus" style="font-size:11px;color:#888;margin-top:4px"></div>
     <table><thead><tr><th>图</th><th>品牌</th><th>型号</th><th>年</th><th>价格</th><th>里程</th><th>3D</th><th>地</th><th>操作</th></tr></thead>
     <tbody id="tbody"></tbody></table>
   </div>
@@ -357,7 +371,107 @@ function createSpin(wrap,urls){
   sv.addEventListener('touchend',function(){drag=false});
 }
 
+// ===== 密码 =====
+var ADMIN_PW = 'huadong888';
+function checkPw(){
+  var v = document.getElementById('pwInput').value.trim();
+  if (v === ADMIN_PW) {
+    localStorage.setItem('admin_auth', '1');
+    document.getElementById('pwGate').style.display = 'none';
+    document.getElementById('pwErr').style.display = 'none';
+  } else {
+    document.getElementById('pwErr').style.display = '';
+  }
+}
+
+// ===== 发布到 GitHub =====
+function doPublish(){
+  var token = localStorage.getItem('gh_token');
+  if (!token) {
+    token = prompt('首次发布需要 GitHub Token。\n\n请粘贴你的 Token（之前创建的那个 ghp_... 开头的）：');
+    if (!token || !token.startsWith('ghp_')) { toast('Token 无效，应以 ghp_ 开头'); return; }
+    localStorage.setItem('gh_token', token);
+  }
+
+  var status = document.getElementById('pubStatus');
+  status.textContent = '⏳ 正在发布...';
+
+  // 生成新的 app.js 内容
+  var newData = '// ========== 二手车数据 ==========\n// 注意：如果浏览器 localStorage 有 car_inventory 数据，网页会优先使用 localStorage 的数据\nvar CAR_DATA = ' + JSON.stringify(cars, null, 2) + ';\n';
+
+  // Base64 encode
+  var content = btoa(unescape(encodeURIComponent(newData)));
+
+  // 先获取当前文件的 SHA
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/lilboat001/huadong-mingche/contents/js/app.js', true);
+  xhr.setRequestHeader('Authorization', 'token ' + token);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+
+  xhr.onload = function(){
+    if (xhr.status === 401 || xhr.status === 403) {
+      localStorage.removeItem('gh_token');
+      status.textContent = '❌ Token 已失效，请重新发布';
+      toast('Token 失效，需要重新输入');
+      return;
+    }
+    if (xhr.status !== 200) {
+      status.textContent = '❌ 网络错误: ' + xhr.status;
+      toast('发布失败: ' + xhr.status);
+      return;
+    }
+
+    var resp = JSON.parse(xhr.responseText);
+    var sha = resp.sha;
+
+    // 提交更新
+    var body = JSON.stringify({
+      message: '更新车辆数据 [' + new Date().toLocaleDateString('zh-CN') + ']',
+      content: content,
+      sha: sha,
+      branch: 'master'
+    });
+
+    var put = new XMLHttpRequest();
+    put.open('PUT', 'https://api.github.com/repos/lilboat001/huadong-mingche/contents/js/app.js', true);
+    put.setRequestHeader('Authorization', 'token ' + token);
+    put.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+    put.setRequestHeader('Content-Type', 'application/json');
+
+    put.onload = function(){
+      if (put.status === 201 || put.status === 200) {
+        status.textContent = '✅ 已发布！网站将在 1-2 分钟内自动更新';
+        toast('发布成功！', 'ok');
+      } else if (put.status === 401 || put.status === 403) {
+        localStorage.removeItem('gh_token');
+        status.textContent = '❌ Token 权限不足';
+        toast('Token 权限不足');
+      } else {
+        status.textContent = '❌ 发布失败: ' + put.status;
+        try {
+          var err = JSON.parse(put.responseText);
+          toast('失败: ' + (err.message || put.status));
+        } catch(e) { toast('发布失败: ' + put.status); }
+      }
+    };
+    put.onerror = function(){
+      status.textContent = '❌ 网络错误';
+      toast('网络错误，请重试');
+    };
+    put.send(body);
+  };
+  xhr.onerror = function(){
+    status.textContent = '❌ 无法连接 GitHub';
+    toast('网络错误，请检查网络');
+  };
+  xhr.send();
+}
+
 // ===== 启动 =====
+// 密码检查
+if (localStorage.getItem('admin_auth') === '1') {
+  document.getElementById('pwGate').style.display = 'none';
+}
 loadData();
 renderTable();
 </script>
