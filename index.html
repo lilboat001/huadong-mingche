@@ -9,7 +9,7 @@
 <meta property="og:image" content="https://lilboat001.github.io/huadong-mingche/images/logo.png">
 <meta property="og:type" content="website">
 <title>衢州华东名车</title>
-<link rel="stylesheet" href="css/style.css?v=13">
+<link rel="stylesheet" href="css/style.css?v=14">
 <style>
 .ct-sec{max-width:1260px;margin:36px auto 0;padding:0 20px}
 .ct-card{background:#fff;border-radius:14px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;box-shadow:0 1px 10px rgba(0,0,0,.04);border:1px solid #eee}
@@ -143,9 +143,9 @@
   </header>
         <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="searchInput2" placeholder="搜索品牌或车型..." oninput="var v=this.value.trim().toLowerCase();var s1=document.getElementById('searchInput');if(s1)s1.value=this.value;window._searchText=v;A.doSearch()"></div>
   <div class="filter-bar">
-    <div class="filter-group"><label class="filter-label">品牌</label><div class="filter-input-wrap"><input type="text" id="filterBrand" list="brandList" placeholder="全部" autocomplete="off"><span class="filter-drop-arrow" onclick="var i=document.getElementById(&quot;filterBrand&quot;);i.value=&quot;&quot;;i.focus();setTimeout(function(){A.doSearch()},100)">▼</span></div><datalist id="brandList"></datalist></div>
-    <div class="filter-group"><label class="filter-label">变速箱</label><div class="filter-input-wrap"><input type="text" id="filterTransmission" list="transList" placeholder="全部" autocomplete="off"><span class="filter-drop-arrow" onclick="var i=document.getElementById(&quot;filterTransmission&quot;);i.value=&quot;&quot;;i.focus();setTimeout(function(){A.doSearch()},100)">▼</span></div><datalist id="transList"><option value="自动"><option value="手动"></datalist></div>
-    <div class="filter-group"><label class="filter-label">燃料</label><div class="filter-input-wrap"><input type="text" id="filterFuel" list="fuelList" placeholder="全部" autocomplete="off"><span class="filter-drop-arrow" onclick="var i=document.getElementById(&quot;filterFuel&quot;);i.value=&quot;&quot;;i.focus();setTimeout(function(){A.doSearch()},100)">▼</span></div><datalist id="fuelList"></datalist></div>
+    <div class="filter-group"><label class="filter-label">品牌</label><select id="filterBrand"><option value="">全部</option></select></div>
+    <div class="filter-group"><label class="filter-label">变速箱</label><select id="filterTransmission"><option value="">全部</option><option value="自动">自动</option><option value="手动">手动</option></select></div>
+    <div class="filter-group"><label class="filter-label">燃料</label><select id="filterFuel"><option value="">全部</option></select></div>
     <div class="filter-group"><label class="filter-label">价格(万元)</label><div class="price-inputs"><input type="number" id="priceMin" placeholder="最低"><span>—</span><input type="number" id="priceMax" placeholder="最高"></div></div>
     <button class="btn-reset" id="btnReset">重置</button>
         <button class="filter-tag" id="filterSpecial" onclick="this.classList.toggle('active');A.doSearch()">💰 近期特价</button>
@@ -251,11 +251,7 @@ function initBrandPills(){
 function renderFeatured(){$('featuredGrid').innerHTML=cars.slice(0,4).map(function(c){var p=(c.price/10000).toFixed(2);return'<div class="featured-card" onclick="A.detail('+c.id+')"><div class="featured-img"><img src="'+(c.images[0]||'')+'" loading="lazy" onerror="this.parentElement.style.background=\'linear-gradient(135deg,#1a1a2e,#c1121f)\'"><div class="featured-overlay"><span class="featured-brand">'+c.brand+' '+c.model+'</span><span class="featured-price">'+p+'万</span></div></div><div class="featured-body"><span class="meta-item">'+(c.year||'')+'年</span><span class="meta-item">'+(c.mileage||'')+'万km</span><span class="meta-item">'+c.transmission+'</span><span class="meta-item">'+(c.location||'')+'</span></div></div>'}).join('')}
 function renderShowroomGrid(list){var show=list.slice(0,9);$('showroomCount').textContent='共 '+list.length+' 辆';var h=show.length?show.map(function(c){var p=(c.price/10000).toFixed(2);return'<div class="car-card" onclick="A.detail('+c.id+')"><div class="card-img"><img src="'+(c.images[0]||'')+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:28px>🚗</div>\'"><div class="card-year-tag">'+(c.year||'')+'年</div>'+(c.spin3d&&c.spin3d.enabled?'<div class="badge-360">360°</div>':'')+'</div><div class="card-body"><div class="card-title">'+c.brand+' '+c.model+'</div><div class="card-price">'+p+'<small>万元</small></div><div class="card-meta"><span class="meta-item">📏 '+(c.mileage||'')+'万km</span><span class="meta-item">⚙️ '+c.transmission+'</span><span class="meta-item">⛽ '+c.fuel+'</span></div></div><div class="card-footer"><span>📍 '+(c.location||'')+'</span><span>'+(c.displacement||'')+'</span></div></div>'}).join(''):'<div class="empty-state"><div class="icon">🔍</div><p>暂无车源</p></div>';h+='<div class="car-card" onclick="A.goSelect()" style="display:flex;align-items:center;justify-content:center;gap:6px;min-height:80px;cursor:pointer;font-size:15px;font-weight:600;color:#e63946">查看更多 <span style="font-size:18px">→</span></div>';$('showroomGrid').innerHTML=h;}
 
-function initFilters(){
-  var bl=document.getElementById('brandList'), fl=document.getElementById('fuelList');
-  if(bl){(new Set(cars.map(function(c){return c.brand}))).forEach(function(b){var o=document.createElement('option');o.value=b;bl.appendChild(o)})}
-  if(fl){(new Set(cars.map(function(c){return c.fuel}))).forEach(function(f){var o=document.createElement('option');o.value=f;fl.appendChild(o)})}
-}
+  function initFilters(){[...new Set(cars.map(function(c){return c.brand}))].sort().forEach(function(b){var o=document.createElement("option");o.value=b;o.textContent=b;$("filterBrand").appendChild(o)});[...new Set(cars.map(function(c){return c.fuel}))].sort().forEach(function(f){var o=document.createElement("option");o.value=f;o.textContent=f;$("filterFuel").appendChild(o)})}
 
 function applyFilters(){
   var f={brand:$('filterBrand').value.toLowerCase(),trans:$('filterTransmission').value.toLowerCase(),fuel:$('filterFuel').value.toLowerCase(),min:$('priceMin').value?+$('priceMin').value:0,max:$('priceMax').value?+$('priceMax').value:Infinity};
@@ -274,11 +270,11 @@ function applyFilters(){
   renderSelectGrid(list);
 }
 
-$('filterBrand').addEventListener('input',applyFilters);
+
 $('filterBrand').addEventListener('change',applyFilters);
-$('filterTransmission').addEventListener('input',applyFilters);
+
 $('filterTransmission').addEventListener('change',applyFilters);
-$('filterFuel').addEventListener('input',applyFilters);
+
 $('filterFuel').addEventListener('change',applyFilters);
 $('priceMin').addEventListener('input',applyFilters);
 $('priceMax').addEventListener('input',applyFilters);
